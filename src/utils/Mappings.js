@@ -7,6 +7,8 @@ export default class Mappings {
 		this.generatedCodeColumn = 0;
 		this.raw = [];
 		this.rawSegments = this.raw[this.generatedCodeLine] = [];
+ 		this.rawRangeMappings = [];
+ 		this.rawRangeMappingsIndices = this.rawRangeMappings[this.generatedCodeLine] = [];
 		this.pending = null;
 	}
 
@@ -26,6 +28,7 @@ export default class Mappings {
 
 				this.generatedCodeLine += 1;
 				this.raw[this.generatedCodeLine] = this.rawSegments = [];
+ 				this.rawRangeMappings[this.generatedCodeLine] = [];
 				this.generatedCodeColumn = 0;
 
 				previousContentLineEnd = contentLineEnd;
@@ -59,6 +62,7 @@ export default class Mappings {
 				loc.column = 0;
 				this.generatedCodeLine += 1;
 				this.raw[this.generatedCodeLine] = this.rawSegments = [];
+ 				this.rawRangeMappings[this.generatedCodeLine] = this.rawRangeMappingsIndices = [];
 				this.generatedCodeColumn = 0;
 				first = true;
 				charInHiresBoundary = false;
@@ -79,7 +83,12 @@ export default class Mappings {
 							this.rawSegments.push(segment);
 							charInHiresBoundary = false;
 						}
-					} else {
+					} else if (this.hires === "experimental-range") {
+ 						if (first) {
+ 							this.rawRangeMappingsIndices.push(this.rawSegments.length);
+ 							this.rawSegments.push(segment);
+ 						}
+ 					} else {
 						this.rawSegments.push(segment);
 					}
 				}
@@ -104,6 +113,7 @@ export default class Mappings {
 			for (let i = 0; i < lines.length - 1; i++) {
 				this.generatedCodeLine++;
 				this.raw[this.generatedCodeLine] = this.rawSegments = [];
+ 				this.rawRangeMappings[this.generatedCodeLine] = this.rawRangeMappingsIndices = [];
 			}
 			this.generatedCodeColumn = 0;
 		}
