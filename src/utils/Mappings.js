@@ -57,6 +57,9 @@ export default class Mappings {
 		let charInHiresBoundary = false;
 
 		while (originalCharIndex < chunk.end) {
+            if (this.hires === "experimental-range" && originalCharIndex + 1 >= chunk.end) {
+                                                        this.rawSegments.push([this.generatedCodeColumn, sourceIndex, loc.line, loc.column]);
+            }
 			if (original[originalCharIndex] === '\n') {
 				loc.line += 1;
 				loc.column = 0;
@@ -84,7 +87,7 @@ export default class Mappings {
 							charInHiresBoundary = false;
 						}
 					} else if (this.hires === "experimental-range") {
- 						if (first) {
+ 						if (originalCharIndex === chunk.start) {
  							this.rawRangeMappingsIndices.push(this.rawSegments.length);
  							this.rawSegments.push(segment);
  						}
