@@ -29,7 +29,15 @@ export default class SourceMap {
 			this.debugId = properties.debugId;
 		}
  		if (typeof properties.rangeMappings !== 'undefined') {
- 		    this.rangeMappings = encodeRangeMappings(properties.rangeMappings);
+            let shouldOutputRangeMapping = false;
+            for (const line of properties.rangeMappings) {
+                if (line.length !== 0) {
+                    shouldOutputRangeMapping = true;
+                    break;
+                }
+            }
+            if (shouldOutputRangeMapping)
+ 		      this.rangeMappings = encodeRangeMappings(properties.rangeMappings);
  		}
 	}
 
